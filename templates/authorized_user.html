@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="card" style="margin-top: 20px">
+    <div class="list-group-item list-group-item-action flex-column align-items-start">
+        <div class="d-flex w-100">
+            <h5 class="mb-1"><b> Yay!</b></h5>
+        </div>
+        You have successfully logged in!<br>Click on the button to go back to the AnYme app<br><br>
+        <a id="button-return-to-app" type="button" class="btn btn-primary active">Return to AnYme</a><br><br>
+        <div class="alert alert-warning" role="alert">
+            When clicking the button, a popup will show up. Make sure you pick the AnYme App!
+        </div>
+    </div>
+</div>
+
+<script>
+(function() {
+   document.querySelector('#button-return-to-app').setAttribute('href', '/redirect?token={{ token }}');
+})();
+
+
+
+
+</script>
+
+{% endblock %}

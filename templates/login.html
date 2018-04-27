@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="card">
+    <center>
+        <img alt="App Logo" src="https://zunjae.github.io/anymeapp.com/icon.png" width="128" height="128">
+    </center>
+</div>
+<div class="card" style="margin-top: 20px">
+    <div class="list-group-item list-group-item-action flex-column align-items-start">
+        <div class="d-flex w-100">
+            <h5 class="mb-1"><b> Login</b></h5>
+        </div>
+        <p class="mb-1">Quickly and securely login into AnYme/KanonApp by singing in through your Google account.
+            AnYme will use your account ID to verify who you are. If you'd like, you can use a throw-away Gmail account.
+        </p>
+        <div id="g-signin-btn" style="margin-top: 20px"></div>
+    </div>
+</div>
+<script type="text/javascript">
+   function onSuccess(googleUser) {
+        var id_token = googleUser.getAuthResponse().id_token
+        $.ajax({
+           url: "register",
+           type: "POST",
+           data: { id_token: id_token},
+           success: function (data) {
+               window.location.href = "/authorized_user?token=" + data;
+           },
+           error: function(data) {
+               alert('Could not authorize: ' + data.text);
+           }
+       });
+       }
+       function onFailure(error) {
+         alert('Sign in failed ):');
+       }
+       function init() {
+       gapi.load('auth2', function() {
+           auth2 = gapi.auth2.init({
+               client_id: '{{ endpoint }}',
+               fetch_basic_profile: true,
+               scope: 'email'
+           });
+           gapi.signin2.render("g-signin-btn", {
+                   scope: 'email',
+                   width: 240,
+                   height: 50,
+                   longtitle: false,
+                   theme: 'dark',
+                   onsuccess: onSuccess,
+                   onfailure: onFailure
+               });
+       });
+       }
+
+
+
+
+</script>
+<script src="https://apis.google.com/js/platform.js?onload=init" async defer></script>
+<script
+        src="https://code.jquery.com/jquery-3.3.1.min.js"
+        integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+        crossorigin="anonymous"></script>
+{% endblock %}
