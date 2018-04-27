@@ -54,8 +54,8 @@ Distributed under the GNU license. See ``LICENSE`` for more information.
 
 ## Contributing
 
-I don't accept pull requests considering Git(hub) is unnecessary complex to understand. Instead, explain your changes line by line through Discord. Can be in public (for example, in the #tech channel) or by sending me a private message. Join [here](http://anymeapp.com/serverinvite)
+I don't accept pull requests considering Git(Hub) is unnecessary complex to understand. Instead, explain your changes line by line through Discord. Can be in public (for example, in the #tech channel) or by sending me a private message. Join [here](http://anymeapp.com/serverinvite)
 
-## Motiviation for making KanonApp open source
+## Motivation for making KanonApp open source
 
 I don't fully understand Python nor hosting a server. By making KanonApp open source I am able to get feedback and fix issues early.
