@@ -34,10 +34,17 @@ In order to run KanonApp you need to following dependencies:
     * sqlite3, flask, flask limiter, 
 * Apache2 if you want to run it on a production server
 
-## Release History
+## Roadmap
 
-* 0.0.1
-    * Base project
+* Controllers/Repository/Decorators should be in separate classes
+
+## Vision
+
+* The server should never use an ORM mapper, because that adds unnecessary complexity to the project
+
+* The Zdb class is responsible for saving or retrieving data
+* The server should be hosted on a server running Apache 2 due to its lower complexity
+* Rate limits should be strict
 
 ## Meta
 
