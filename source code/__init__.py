@@ -63,9 +63,9 @@ def valid_json(view_function):
     @wraps(view_function)
     def wrapper(*args, **kw):
         try:
-            request.json
+            assert 0 < len(request.json) < 1000
         except BadRequest as e:
-            print("Request must contain a json body")
+            print("Request must contain a json body that only has max 1000 items")
             abort(400)
         return view_function(*args, **kw)
 
@@ -89,29 +89,38 @@ def register():
     id_token = request.values["id_token"]
 
     if id_token is None or len(id_token) < 20:
+        print("[register] token was null or length was smaller than 20")
         return "Incorrect token provided <1>", 400
 
     # validate on Google's backend
     r = requests.get("https://www.googleapis.com/oauth2/v3/tokeninfo?id_token={0}".format(id_token))
     print(r.status_code)
     if r.status_code != 200:
-        return "Incorrect status code", 400
+        print("[register] Could not authorize with google. status code was {}".format(r.status_code))
+        return "Incorrect status code <2>", 400
 
     # validate AUD
     valid_aud = r.json()["aud"] == aud_public
     if not valid_aud:
-        return "Incorrect request <2>", 400
+        print("[register] the aud wasn't the same")
+        return "Incorrect request <3>", 400
 
     # retrieve user id
     google_user_id = r.json()["sub"]
     print(google_user_id)
 
     # check if already exists, if not create token. if it does, retrieve token
-    token = UserRepository.get_user_token_by_google_id(google_user_id)
+    try:
+        token = UserRepository.get_user_token_by_google_id(google_user_id)
+        if token and len(token) > 0:
+            return token
+    except Exception as e:
+        print(e)
+
+    token = UserRepository.create_new_user(google_user_id)
     if token is None:
-        token = UserRepository.create_new_user(google_user_id)
-        if token is None:
-            return "Could not create an account <3>", 400
+        print("create_new_user failed, was null")
+        return "Could not create an account <4>", 400
 
     return token, 200
 
