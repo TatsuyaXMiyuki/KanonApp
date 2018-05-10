@@ -42,3 +42,9 @@ CREATE TABLE IF NOT EXISTS UserWaifus (
     PRIMARY KEY (UserId, WaifuId),
     FOREIGN KEY (UserId) REFERENCES Users(UserId)
 );
+
+CREATE TABLE IF NOT EXISTS AnimeRating (
+    AnimeId INT NOT NULL,
+    AnimeRating REAL NULL,
+    PRIMARY KEY (AnimeId)
+);
