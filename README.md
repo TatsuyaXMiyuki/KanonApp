@@ -1,6 +1,8 @@
 # KanonApp
 > Companion server for the AnYme App
 
+<img src="https://raw.githubusercontent.com/zunjae/KanonApp/master/K%20Logo.png" data-canonical-src="https://raw.githubusercontent.com/zunjae/KanonApp/master/K%20Logo.png" width="100" height="100" />
+
 
 KanonApp is a server which adds extra functionality to AnYme which is otherwise not possible with just MyAnimeList and AnYme.
 
