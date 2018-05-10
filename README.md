@@ -2,7 +2,7 @@
 > Companion server for the AnYme App
 
 
-KanonApp is a server which adds extra functionality which is otherwise not possible with just MyAnimeList and AnYme.
+KanonApp is a server which adds extra functionality to AnYme which is otherwise not possible with just MyAnimeList and AnYme.
 
 The features are:
 
@@ -10,13 +10,17 @@ The features are:
 * Save unlimited waifus to your profile
 * Save your favorite songs
 
-Obviously more will come soon, however this is just a start
+Obviously more will come soon, however this is just a start (feel free to request new features on the Discord server!!!)
 
 The data will be kept in sync on the KanonApp server which means it is available on all your devices.
 
 # How do I use KanonApp?
 
 visit https://kanonapp.com/login on your phone. You can check in the source code how the login process works.
+
+---
+
+Nerd stuff below, don't read if you are not interested in hosting Kanon yourself.
 
 ## Installation
 
@@ -26,6 +30,7 @@ Linux:
 git clone https://github.com/zunjae/KanonApp.git
 cd source code
 bash setup.sh
+python3.5 __init__.py
 ```
 
 ## Development setup
@@ -41,11 +46,11 @@ In order to run KanonApp you need to following dependencies:
 ## Roadmap
 
 * Controllers/Repository/Decorators should be in separate classes
+* Rate limits should be based on the user_token instead of remote address
 
 ## Vision
 
-* The server should never use an ORM mapper, because that adds unnecessary complexity to the project
-
+* The server should never use an ORM mapper, because it adds unnecessary complexity to the project
 * The Zdb class is responsible for saving or retrieving data
 * The server should be hosted on a server running Apache 2 due to its lower complexity
 * Rate limits should be strict
