@@ -7,16 +7,17 @@ from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 from werkzeug.exceptions import BadRequest, abort
 
-import AnimeRepository
-import NotesRepository
-import UserRepository
-import WaifuRepository
+from KanonApp import AnimeRepository
+from KanonApp import NotesRepository
+from KanonApp import UserRepository
+from KanonApp import WaifuRepository
 
 app = Flask(__name__)
 
 app.config['RATELIMIT_HEADERS_ENABLED'] = True
-aud_public = "GOOGLE_LOGIN_GOES_HERE.com"
-API_KEY = "APP_KEY_GOES_HERE"
+aud_public = "FKDOFKDOFKDOS-t0q9nbltep2b0r4d15dmfldl01eelql4.apps.googleusercontent.com"
+API_KEY_PUBLIC = "KFODSKOFKDAOFKDSOFK"
+API_KEY_DEV = "RFEOJCOSKOWQKEEEK"
 
 limiter = Limiter(
     app,
@@ -30,7 +31,7 @@ def get_user_id_from_header(_request):
     return request.headers.get('UserToken') or None
 
 
-def inject_token(view_function):
+def inject_user_token(view_function):
     @wraps(view_function)
     def decorated_function(*args, **kwargs):
         token = get_user_id_from_header(request)
@@ -45,11 +46,25 @@ def inject_token(view_function):
     return decorated_function
 
 
+def requires_dev_app_key(view_function):
+    @wraps(view_function)
+    def wrapper(*args, **kw):
+        api_key = request.headers.get('APIKey') or None
+        if api_key and api_key == API_KEY_DEV:
+            print("valid api key...")
+            return view_function(*args, **kw)
+        else:
+            print("Invalid APIKey given")
+            abort(400)
+
+    return wrapper
+
+
 def requires_app_key(view_function):
     @wraps(view_function)
     def wrapper(*args, **kw):
         api_key = request.headers.get('APIKey') or None
-        if api_key and api_key == API_KEY:
+        if api_key and api_key == API_KEY_PUBLIC:
             print("valid api key...")
             return view_function(*args, **kw)
         else:
@@ -65,7 +80,10 @@ def valid_json(view_function):
         try:
             assert 0 < len(request.json) < 1000
         except BadRequest as e:
-            print("Request must contain a json body that only has max 1000 items")
+            print("Request must contain a json body")
+            abort(400)
+        if len(request.json) > 250:
+            print("Request body too big > {}".format(len(request.json)))
             abort(400)
         return view_function(*args, **kw)
 
@@ -73,6 +91,15 @@ def valid_json(view_function):
 
 
 # endregion
+
+
+# todo: remove . This does not make sense but needs to be enabled for backwards compatibility
+@app.route("/relations", methods=['POST'])
+@limiter.limit("10/minute")
+@valid_json
+def relations():
+    mal_id = request.json.get("id")
+    return AnimeRepository.get_relations(mal_id)
 
 
 @app.route("/relations/<int:anime_id>", methods=['GET'])
@@ -132,6 +159,13 @@ def authorized_user():
     return render_template('authorized_user.html', token=token)
 
 
+@app.route("/redirect", methods=['GET'])
+@limiter.limit("5/minute")
+def redirect_after_login():
+    token = request.values["token"]
+    return render_template('redirect_after_login.html', token=token)
+
+
 @app.route("/login", methods=['GET'])
 @limiter.limit("5/minute")
 def login():
@@ -144,23 +178,40 @@ def login():
 
 @app.route("/waifus", methods=['GET'])
 @limiter.limit("10/minute")
-@inject_token
+@inject_user_token
 @requires_app_key
 def get_waifus_by_user_token(user_token):
     return WaifuRepository.get_waifus_by_token(user_token)
 
 
+@app.route("/waifus/user/count", methods=['GET'])
+@limiter.limit("15/minute")
+@inject_user_token
+@requires_app_key
+def get_user_waifu_count(user_token):
+    return WaifuRepository.get_number_of_waifus(user_token)
+
+
 @app.route("/waifus/anime/<int:anime_id>", methods=['GET'])
-@limiter.limit("10/minute")
-@inject_token
+@limiter.limit("15/minute")
+@inject_user_token
 @requires_app_key
 def get_waifu_by_token_and_anime_id(anime_id, user_token):
     return WaifuRepository.get_waifus_by_token_and_anime_id(user_token, anime_id)
 
 
+@app.route("/waifus/ids", methods=['POST'])
+@limiter.limit("15/minute")
+@inject_user_token
+@requires_app_key
+@valid_json
+def get_waifu_ids_by_character_ids(user_token):
+    return WaifuRepository.get_waifus_by_list_of_waifu_ids(user_token, request.json)
+
+
 @app.route("/waifus/<int:waifu_id>", methods=['DELETE'])
 @limiter.limit("5/second;30/minute;100/day")
-@inject_token
+@inject_user_token
 @requires_app_key
 def delete_waifu(waifu_id, user_token):
     try:
@@ -171,9 +222,16 @@ def delete_waifu(waifu_id, user_token):
         return "Could not delete the waifu...", 400
 
 
+@app.route("/waifus/top/<int:number_of_waifus>", methods=['GET'])
+@limiter.limit("10/minute")
+@requires_app_key
+def get_top_waifus(number_of_waifus):
+    return WaifuRepository.get_top_waifus(number_of_waifus)
+
+
 @app.route("/waifus", methods=['POST'])
 @limiter.limit("5/second;30/minute;100/day")
-@inject_token
+@inject_user_token
 @valid_json
 @requires_app_key
 def save_waifu(user_token):
@@ -191,7 +249,7 @@ def save_waifu(user_token):
 
 @app.route("/notes", methods=['POST'])
 @limiter.limit("3/second;30/minute;100/day")
-@inject_token
+@inject_user_token
 @valid_json
 @requires_app_key
 def save_note(user_token):
@@ -205,10 +263,21 @@ def save_note(user_token):
 
 @app.route("/notes/anime/<int:anime_id>", methods=['GET'])
 @limiter.limit("10/minute")
-@inject_token
+@inject_user_token
 @requires_app_key
 def get_notes_by_anime_id(user_token, anime_id):
     return NotesRepository.get_notes_by_anime(user_token, anime_id)
+
+
+# endregion
+
+# region Anime
+@app.route("/anime/ratings", methods=['POST'])
+@limiter.limit("15/minute")
+@requires_dev_app_key
+@valid_json
+def get_anime_ratings():
+    return AnimeRepository.get_ratings(request.json)
 
 
 # endregion
