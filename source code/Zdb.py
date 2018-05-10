@@ -1,7 +1,7 @@
 import json
 import sqlite3
 
-import appconfig
+from KanonApp import appconfig
 
 
 # useful when bulk inserting
@@ -37,6 +37,13 @@ def get_json_result(query, args=()):
         cur = conn.execute(query, args)
         data = cur.fetchall()
         return json.dumps([dict(ix) for ix in data])
+
+
+def get_result(query, args=()):
+    conn = get_conn(with_rows=False)
+    with conn:
+        cur = conn.execute(query, args)
+        return cur.fetchall()
 
 
 def get_simple_value(query, args=(), force_one=True):
