@@ -18,7 +18,7 @@ The data will be kept in sync on the KanonApp server which means it is available
 
 # How do I use KanonApp?
 
-visit https://kanonapp.com/login on your phone. You can check in the source code how the login process works.
+visit https://kanonapp.com/login on your phone. Make sure you have the AnYme app installed :)
 
 ---
 
