@@ -26,12 +26,12 @@ def get_number_of_waifus(user_token):
 
 
 def get_top_waifus(number_of_waifus):
-    max_number_of_waifus = 15
+    max_number_of_waifus = 25
     if number_of_waifus > max_number_of_waifus:
         number_of_waifus = max_number_of_waifus
 
     return Zdb.get_json_result(
-        "SELECT count(WaifuId) as TotalFavoriteCount, WaifuName, AnimeId, WaifuName, ImageURL, DateCreated "
+        "SELECT count(WaifuId) as TotalFavoriteCount, WaifuName, AnimeId, WaifuId, ImageURL "
         "FROM UserWaifus "
         "GROUP BY WaifuId "
         "ORDER BY TotalFavoriteCount DESC "
