@@ -80,10 +80,7 @@ def valid_json(view_function):
         try:
             assert 0 < len(request.json) < 1000
         except BadRequest as e:
-            print("Request must contain a json body")
-            abort(400)
-        if len(request.json) > 250:
-            print("Request body too big > {}".format(len(request.json)))
+            print(e)
             abort(400)
         return view_function(*args, **kw)
 
@@ -100,13 +97,6 @@ def valid_json(view_function):
 def relations():
     mal_id = request.json.get("id")
     return AnimeRepository.get_relations(mal_id)
-
-
-@app.route("/relations/<int:anime_id>", methods=['GET'])
-@limiter.limit("10/minute")
-@requires_app_key
-def better_relations(anime_id):
-    return AnimeRepository.get_relations(anime_id)
 
 
 # region Login
@@ -248,7 +238,7 @@ def save_waifu(user_token):
 # region Notes
 
 @app.route("/notes", methods=['POST'])
-@limiter.limit("3/second;30/minute;100/day")
+@limiter.limit("3/second;10/minute;100/day")
 @inject_user_token
 @valid_json
 @requires_app_key
@@ -280,8 +270,23 @@ def get_anime_ratings():
     return AnimeRepository.get_ratings(request.json)
 
 
-# endregion
+@app.route("/relations/<int:anime_id>", methods=['GET'])
+@app.route("/anime/relations/<int:anime_id>", methods=['GET'])
+@limiter.limit("10/minute")
+@requires_app_key
+def better_relations(anime_id):
+    return AnimeRepository.get_relations(anime_id)
 
+
+@app.route("/anime/info/ids", methods=['POST'])
+@limiter.limit("5/minute")
+@requires_dev_app_key
+@valid_json
+def get_basic_anime_info():
+    return AnimeRepository.get_basic_show_information(request.json)
+
+
+# endregion
 
 if __name__ == '__main__':
     app.run(debug=True, port=80)
