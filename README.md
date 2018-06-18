@@ -1,16 +1,18 @@
 # KanonApp
-> Companion server for the AnYme App
+> Companion for the AnYme App
 
 <img src="https://raw.githubusercontent.com/zunjae/KanonApp/master/K%20Logo.png" data-canonical-src="https://raw.githubusercontent.com/zunjae/KanonApp/master/K%20Logo.png" width="100" height="100" />
 
-
-KanonApp is a server which adds extra functionality to AnYme which is otherwise not possible with just MyAnimeList and AnYme.
+KanonApp is a server which adds extra functionality to AnYme.
 
 The features are:
 
 * Add notes to episodes you have watched
 * Save unlimited waifus to your profile
-* Save your favorite songs
+* Save unlimited songs*
+* save unlimited shows*
+
+(* work in progress)
 
 Obviously more will come soon, however this is just a start (feel free to request new features on the Discord server!!!)
 
@@ -19,6 +21,7 @@ The data will be kept in sync on the KanonApp server which means it is available
 # How do I use KanonApp?
 
 visit https://kanonapp.com/login on your phone. Make sure you have the AnYme app installed :)
+You don't have to install anything. All you have to do is login through your Gmail account which only takes a few seconds.
 
 ---
 
