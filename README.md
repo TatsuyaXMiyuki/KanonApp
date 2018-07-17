@@ -55,9 +55,9 @@ In order to run KanonApp you need to following dependencies:
 
 ## Vision
 
-* The server should never use an ORM mapper, because it adds unnecessary complexity to the project
-* The Zdb class is responsible for saving or retrieving data
-* The server should be hosted on a server running Apache 2 due to its lower complexity
+* The server should never use an ORM mapper because it adds unnecessary complexity to the project
+* The Zdb class is responsible for saving or retrieving data from the SQLite database
+* The server should be hosted on a server running Apache 2
 * Rate limits should be strict
 
 ## Meta
@@ -72,4 +72,4 @@ I don't accept pull requests considering Git(Hub) is unnecessary complex to unde
 
 ## Motivation for making KanonApp open source
 
-I don't fully understand Python nor hosting a server. By making KanonApp open source I am able to get feedback and fix issues early.
+I plan on allowing users to host Kanon themselves. In the future, AnYme will have the option to setup your own backend so syncing should happen on _your_ server.
