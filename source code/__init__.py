@@ -36,14 +36,25 @@ def inject_user_token(view_function):
     def decorated_function(*args, **kwargs):
         token = get_user_id_from_header(request)
         if token is not None and len(token) > 0:
-            kwargs['user_token'] = get_user_id_from_header(requests)
-            print("Token found: {}".format(token))
+            kwargs['user_token'] = token
             return view_function(*args, **kwargs)
 
-        print("Headers did not contain the user token")
         abort(401)
 
     return decorated_function
+
+
+def avoid_common_user_agents(view_function):
+    @wraps(view_function)
+    def wrapper(*args, **kw):
+        useragent = str(request.headers.get('User-Agent')).lower()
+        print("User agent = ({})".format(useragent))
+        if useragent == "" or "discord" in useragent:
+            print("Bad header ({}) found".format(useragent))
+            abort(400)
+        return view_function(*args, **kw)
+
+    return wrapper
 
 
 def requires_dev_app_key(view_function):
@@ -51,10 +62,8 @@ def requires_dev_app_key(view_function):
     def wrapper(*args, **kw):
         api_key = request.headers.get('APIKey') or None
         if api_key and api_key == API_KEY_DEV:
-            print("valid api key...")
             return view_function(*args, **kw)
         else:
-            print("Invalid APIKey given")
             abort(400)
 
     return wrapper
@@ -65,10 +74,8 @@ def requires_app_key(view_function):
     def wrapper(*args, **kw):
         api_key = request.headers.get('APIKey') or None
         if api_key and api_key == API_KEY_PUBLIC:
-            print("valid api key...")
             return view_function(*args, **kw)
         else:
-            print("Invalid APIKey given")
             abort(400)
 
     return wrapper
@@ -78,8 +85,11 @@ def valid_json(view_function):
     @wraps(view_function)
     def wrapper(*args, **kw):
         try:
-            assert 0 < len(request.json) < 1000
-        except BadRequest as e:
+            print(len(request.json))
+            if len(request.json) > 1500:
+                print("Json body too big")
+                abort(400)
+        except Exception as e:
             print(e)
             abort(400)
         return view_function(*args, **kw)
@@ -90,17 +100,9 @@ def valid_json(view_function):
 # endregion
 
 
-# todo: remove . This does not make sense but needs to be enabled for backwards compatibility
-@app.route("/relations", methods=['POST'])
-@limiter.limit("10/minute")
-@valid_json
-def relations():
-    mal_id = request.json.get("id")
-    return AnimeRepository.get_relations(mal_id)
-
-
 # region Login
 @app.route("/register", methods=['POST'])
+@app.route("/account/register", methods=['POST'])
 @limiter.limit("10/day")
 def register():
     id_token = request.values["id_token"]
@@ -143,21 +145,24 @@ def register():
 
 
 @app.route("/authorized_user", methods=['GET'])
-@limiter.limit("5/minute")
+@app.route("/account/authorized_user", methods=['GET'])
+@limiter.limit("5/minute;10/hour;15/day")
 def authorized_user():
     token = request.values["token"]
     return render_template('authorized_user.html', token=token)
 
 
 @app.route("/redirect", methods=['GET'])
-@limiter.limit("5/minute")
+@app.route("/account/redirect", methods=['GET'])
+@limiter.limit("5/minute;10/hour;15/day")
 def redirect_after_login():
     token = request.values["token"]
     return render_template('redirect_after_login.html', token=token)
 
 
 @app.route("/login", methods=['GET'])
-@limiter.limit("5/minute")
+@app.route("/account/register", methods=['GET'])
+@limiter.limit("5/minute;10/hour;15/day")
 def login():
     return render_template('login.html', endpoint=aud_public)
 
