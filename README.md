@@ -23,4 +23,8 @@ The data will be kept in sync on the KanonApp server which means it is available
 visit https://kanonapp.com/account/register on your phone. Make sure you have the AnYme app installed :)
 You don't have to install anything extra. All you have to do is login through your Gmail account which only takes a few seconds.
 
-Usage: []
+## Meta
+
+ZUNJAE – [/u/zunjae](https://www.reddit.com/user/zunjae/) – zunjaeprivate@gmail.com
+
+Distributed under the GNU license. See ``LICENSE`` for more information.
