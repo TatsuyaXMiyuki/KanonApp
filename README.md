@@ -9,6 +9,7 @@ The features are:
 
 * Add notes to episodes you have watched
 * Save unlimited waifus to your profile
+* Get accurate recommendations based on shows you like
 * Save unlimited songs*
 * save unlimited shows*
 
