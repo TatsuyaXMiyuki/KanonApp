@@ -7,6 +7,7 @@ Kanon is a server which adds extra functionality to AnYme.
 
 The features are:
 
+* Get notified on new episode releases, even when the app is turned off
 * Add notes to episodes you have watched
 * Save unlimited waifus to your profile
 * Get accurate recommendations based on shows you like
