@@ -28,9 +28,6 @@ In order to run KanonApp you need to following dependencies:
 
 ## Vision
 
-* The server should never use an ORM mapper because it adds unnecessary complexity to the project
-* The Zdb class is responsible for saving or retrieving data from the SQLite database
-* The server should be hosted on a server running Apache 2
 * Rate limits should be strict
 
 ## Meta
@@ -38,10 +35,6 @@ In order to run KanonApp you need to following dependencies:
 ZUNJAE – [/u/zunjae](https://www.reddit.com/user/zunjae/) – zunjaeprivate@gmail.com
 
 Distributed under the GNU license. See ``LICENSE`` for more information.
-
-## Contributing
-
-I don't accept pull requests considering Git(Hub) is unnecessary complex to understand. Instead, explain your changes line by line through Discord. Can be in public (for example, in the #tech channel) or by sending me a private message. Join [here](http://anymeapp.com/serverinvite)
 
 ## Motivation for making KanonApp open source
 
