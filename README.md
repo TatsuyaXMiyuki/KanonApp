@@ -23,6 +23,6 @@ You don't have to install anything extra. All you have to do is login through yo
 
 ## Meta
 
-ZUNJAE – [/u/zunjae](https://www.reddit.com/user/zunjae/) – zunjaeprivate@gmail.com
+ZUNJAE – [/u/zunjae](https://www.reddit.com/user/zunjae/)
 
 Distributed under the GNU license. See ``LICENSE`` for more information.
